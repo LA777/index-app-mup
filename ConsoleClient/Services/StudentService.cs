@@ -1,44 +1,38 @@
-﻿using ConsoleClient.Models;
+﻿using ConsoleClient.Clients;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConsoleClient.Services
 {
     public class StudentService : IStudentService
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IApiClient _apiClient;
 
-        public StudentService(IHttpClientFactory clientFactory)
+        public StudentService(IApiClient apiClient)
         {
-            _clientFactory = clientFactory;
+            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
-        public async Task<IEnumerable<Student>> GetStudents()
+        public async Task<int> GetHighestAttendanceYear()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
-            var client = _clientFactory.CreateClient();
-            var response = await client.SendAsync(request);
 
-            if (response.IsSuccessStatusCode)// TODO LA - check for application/json
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
+            throw new NotImplementedException();
+        }
 
-                var options = new JsonSerializerOptions
-                {
-                    AllowTrailingCommas = true
-                };
+        public Task<int> GetHighestGPAYear()
+        {
+            throw new NotImplementedException();
+        }
 
-                var students = JsonSerializer.Deserialize<IEnumerable<Student>>(responseContent, options);
+        public Task<int> GetStudentIdMostInconsistent()
+        {
+            throw new NotImplementedException();
+        }
 
-                return students;
-            }
-            else
-            {
-                throw new Exception($"Response status code: {response.StatusCode}");
-            }
+        public Task<IEnumerable<int>> GetTopStudentsWithHighestGPA()
+        {
+            throw new NotImplementedException();
         }
     }
 }

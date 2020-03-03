@@ -1,9 +1,9 @@
-﻿using ConsoleClient.Services;
+﻿using ConsoleClient.Clients;
+using ConsoleClient.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConsoleClient
@@ -17,6 +17,7 @@ namespace ConsoleClient
                 {
                     services.AddHttpClient();
                     services.AddTransient<IStudentService, StudentService>();
+                    services.AddTransient<IApiClient, ApiClient>();
                 }).UseConsoleLifetime();
 
             var host = builder.Build();
@@ -28,9 +29,9 @@ namespace ConsoleClient
                 try
                 {
                     var studentService = services.GetRequiredService<IStudentService>();
-                    var students = await studentService.GetStudents();
+                    var result = await studentService.GetHighestAttendanceYear();
 
-                    Console.WriteLine(students.Count());
+                    Console.WriteLine(result);
                 }
                 catch (Exception ex)
                 {
