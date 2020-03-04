@@ -3,57 +3,60 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleClient.Clients
 {
     public class ApiClient : IApiClient
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly HttpClient _httpClient;
 
-        public ApiClient(IHttpClientFactory clientFactory)
+        public ApiClient(HttpClient httpClient)
         {
-            _clientFactory = clientFactory;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<IEnumerable<Student>> GetStudents()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
-            var client = _clientFactory.CreateClient();
-            var response = await client.SendAsync(request);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-            if (response.IsSuccessStatusCode)// TODO LA - check for application/json
+            var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationTokenSource.Token).ConfigureAwait(false);
+
+            if (httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
-                var options = new JsonSerializerOptions
+                var jsonSerializerOptions = new JsonSerializerOptions
                 {
                     AllowTrailingCommas = true
                 };
 
-                var students = JsonSerializer.Deserialize<IEnumerable<Student>>(responseContent, options);
+                var students = await JsonSerializer.DeserializeAsync<IEnumerable<Student>>(contentStream, jsonSerializerOptions);
 
                 return students;
             }
             else
             {
-                throw new Exception($"Response status code: {response.StatusCode}");
+                throw new Exception($"Response status code: {httpResponseMessage.StatusCode}");
             }
         }
 
         public async Task SubmitStudentAggregate(IEnumerable<StudentAggregate> studentAggregates)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");
-            var client = _clientFactory.CreateClient();
-            var response = await client.SendAsync(request);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-            if (response.IsSuccessStatusCode)// TODO LA - check for application/json
+            var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationTokenSource.Token).ConfigureAwait(false);
+
+            if (httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
             }
             else
             {
-                throw new Exception($"Response status code: {response.StatusCode}");
+                throw new Exception($"Response status code: {httpResponseMessage.StatusCode}");
             }
         }
     }

@@ -15,9 +15,9 @@ namespace ConsoleClient
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHttpClient();
+                    services.AddHttpClient<ApiClient>();
+                    services.AddSingleton<ApiClientFactory>();
                     services.AddTransient<IStudentService, StudentService>();
-                    services.AddTransient<IApiClient, ApiClient>();
                 }).UseConsoleLifetime();
 
             var host = builder.Build();
