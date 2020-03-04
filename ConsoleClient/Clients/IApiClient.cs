@@ -6,8 +6,8 @@ namespace ConsoleClient.Clients
 {
     public interface IApiClient
     {
-        Task<IEnumerable<Student>> GetStudents();
+        Task<IEnumerable<Student>> GetStudentsAsync();
 
-        Task SubmitStudentAggregate(IEnumerable<StudentAggregate> studentAggregates);
+        Task SubmitStudentAggregateAsync(IEnumerable<StudentAggregate> studentAggregates);
     }
 }

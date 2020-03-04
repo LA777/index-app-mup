@@ -3,11 +3,13 @@ using ConsoleClient.Clients;
 using ConsoleClient.Models;
 using FluentAssertions;
 using Moq;
-using Moq.Protected;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using Tests.Clients;
 using Xunit;
 
 namespace Tests
@@ -15,20 +17,24 @@ namespace Tests
     public class ApiClientTests : TestBase
     {
         private ApiClient _sut;
-        private readonly Mock<HttpClient> _httpClientMock = new Mock<HttpClient>();
+        private readonly Mock<HttpClient> _httpClientMock;
+        private Mock<FakeHttpMessageHandler> _fakeHttpMessageHandler;
 
 
         public ApiClientTests()
         {
+            _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
+            _httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object); // Set the FakeHttpMessageHandler as HttpClient's inner handler
             _sut = new ApiClient(_httpClientMock.Object);
         }
 
         [Fact]
-        public void GetStudents_Should_Call_HttpClient_And_Return_Students_List()
+        public async Task GetStudents_Should_Call_HttpClient_And_Return_Students_List()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>();
             var studentsJson = JsonSerializer.Serialize(students);
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
             var httpResponseMessage = new HttpResponseMessage
@@ -37,19 +43,15 @@ namespace Tests
                 StatusCode = HttpStatusCode.OK
             };
 
-
-            _httpClientMock.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>())
-                .ReturnsAsync(httpResponseMessage);
-
+            _fakeHttpMessageHandler.Setup(x => x.SendAsync(It.IsAny<HttpRequestMessage>(), It.IsAny<HttpCompletionOption>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(httpResponseMessage);
 
             // Act
-            var result = _sut.GetStudents();
+            var result = await _sut.GetStudentsAsync();
 
             // Assert
             result.Should().BeEquivalentTo(students);
-            _httpClientMock.Verify(x => x.SendAsync(httpRequestMessage), Times.Once);
-            //_crmWebApiClientMock.Verify(m => m.GetDocumentByDocumentIdAsync(documentId));
+            _fakeHttpMessageHandler.Verify(x => x.SendAsync(It.IsAny<HttpRequestMessage>(), It.IsAny<HttpCompletionOption>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

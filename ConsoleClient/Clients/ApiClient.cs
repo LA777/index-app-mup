@@ -17,7 +17,7 @@ namespace ConsoleClient.Clients
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<IEnumerable<Student>> GetStudents()
+        public async Task<IEnumerable<Student>> GetStudentsAsync()
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
             using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
@@ -43,7 +43,7 @@ namespace ConsoleClient.Clients
             }
         }
 
-        public async Task SubmitStudentAggregate(IEnumerable<StudentAggregate> studentAggregates)
+        public async Task SubmitStudentAggregateAsync(IEnumerable<StudentAggregate> studentAggregates)
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");
             using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
