@@ -57,7 +57,9 @@ namespace ConsoleClient
                     logging.AddFilter("Microsoft", LogLevel.Warning);
                     logging.AddFilter("System", LogLevel.Warning);
                     logging.AddFilter("ConsoleClient.Program", LogLevel.Debug);
-                    logging.AddConsole();
+                    logging.AddConsole(o => o.TimestampFormat = "[yyyy.MM.dd HH:mm:ss] ");
+                    logging.AddDebug();
+                    logging.SetMinimumLevel(LogLevel.Debug);
                 })
                 .UseConsoleLifetime();
 

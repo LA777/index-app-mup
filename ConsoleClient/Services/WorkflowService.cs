@@ -11,7 +11,7 @@ namespace ConsoleClient.Services
         private readonly IApiClientFactory _apiClientFactory;
         private readonly ILogger _logger;
 
-        public WorkflowService(IApiClientFactory apiClientFactory, ILogger logger)
+        public WorkflowService(IApiClientFactory apiClientFactory, ILogger<WorkflowService> logger)
         {
             _apiClientFactory = apiClientFactory ?? throw new ArgumentNullException(nameof(apiClientFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -21,6 +21,7 @@ namespace ConsoleClient.Services
         {
             var apiClient = _apiClientFactory.Create();
             var students = await apiClient.GetStudentsAsync();
+
             var json = JsonSerializer.Serialize(students);
             _logger.LogDebug(json);
 
