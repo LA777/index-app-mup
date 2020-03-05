@@ -3,7 +3,7 @@ using System;
 
 namespace ConsoleClient.Clients
 {
-    public class ApiClientFactory
+    public class ApiClientFactory : IApiClientFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -12,7 +12,7 @@ namespace ConsoleClient.Clients
             _serviceProvider = serviceProvider;
         }
 
-        public ApiClient Create()
+        public IApiClient Create()
         {
             return _serviceProvider.GetRequiredService<ApiClient>();
         }
