@@ -29,7 +29,7 @@ namespace ConsoleClient
                 try
                 {
                     var studentService = services.GetRequiredService<IStudentService>();
-                    var result = await studentService.GetHighestAttendanceYear();
+                    var result = studentService.GetHighestAttendanceYear();
 
                     Console.WriteLine(result);
                 }

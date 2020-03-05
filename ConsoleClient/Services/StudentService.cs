@@ -1,7 +1,6 @@
 ﻿using ConsoleClient.Clients;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ConsoleClient.Services
 {
@@ -14,23 +13,22 @@ namespace ConsoleClient.Services
             _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
         }
 
-        public async Task<int> GetHighestAttendanceYear()
-        {
-
-            throw new NotImplementedException();
-        }
-
-        public Task<int> GetHighestGPAYear()
+        public int GetHighestAttendanceYear()
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> GetStudentIdMostInconsistent()
+        public int GetHighestGPAYear()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<int>> GetTopStudentsWithHighestGPA()
+        public int GetStudentIdMostInconsistent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> GetTopStudentsWithHighestGPA()
         {
             throw new NotImplementedException();
         }
