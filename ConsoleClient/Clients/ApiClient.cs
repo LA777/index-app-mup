@@ -18,10 +18,10 @@ namespace ConsoleClient.Clients
 
         public async Task<IEnumerable<Student>> GetStudentsAsync()
         {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");// TODO LA - move URL to appsettings???
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
+            if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
                 throw new Exception($"Response status code: {httpResponseMessage.StatusCode}");
             }
@@ -34,12 +34,13 @@ namespace ConsoleClient.Clients
 
         }
 
+        // TODO LA - Cove with Unit Tests
         public async Task SubmitStudentAggregateAsync(IEnumerable<StudentAggregate> studentAggregates)
         {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");// TODO LA - move URL to appsettings???
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
-            if (httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json
+            if (httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
                 var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
             }
