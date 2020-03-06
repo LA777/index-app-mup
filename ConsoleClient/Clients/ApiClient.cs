@@ -16,7 +16,7 @@ namespace ConsoleClient.Clients
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<IEnumerable<Student>> GetStudentsAsync()
+        public async Task<IReadOnlyCollection<Student>> GetStudentsAsync()
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://apitest.sertifi.net/api/Students");// TODO LA - move URL to appsettings???
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
@@ -28,7 +28,7 @@ namespace ConsoleClient.Clients
 
             await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
             var jsonSerializerOptions = new JsonSerializerOptions { AllowTrailingCommas = true };
-            var students = await JsonSerializer.DeserializeAsync<IEnumerable<Student>>(contentStream, jsonSerializerOptions);
+            var students = await JsonSerializer.DeserializeAsync<IReadOnlyCollection<Student>>(contentStream, jsonSerializerOptions);
 
             return students;
 

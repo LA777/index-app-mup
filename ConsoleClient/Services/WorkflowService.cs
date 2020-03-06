@@ -10,11 +10,13 @@ namespace ConsoleClient.Services
     {
         private readonly IApiClientFactory _apiClientFactory;
         private readonly ILogger _logger;
+        private readonly IStudentService _studentService;
 
-        public WorkflowService(IApiClientFactory apiClientFactory, ILogger<WorkflowService> logger)
+        public WorkflowService(IApiClientFactory apiClientFactory, ILogger<WorkflowService> logger, IStudentService studentService)
         {
             _apiClientFactory = apiClientFactory ?? throw new ArgumentNullException(nameof(apiClientFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _studentService = studentService ?? throw new ArgumentNullException(nameof(studentService));
         }
 
         public async Task DoTestTaskAsync()
@@ -26,7 +28,8 @@ namespace ConsoleClient.Services
             _logger.LogDebug(json);
 
 
-
+            var highestAttendanceYear = _studentService.GetHighestAttendanceYear(students);
+            _logger.LogDebug($"highestAttendanceYear: {highestAttendanceYear}");
 
         }
     }

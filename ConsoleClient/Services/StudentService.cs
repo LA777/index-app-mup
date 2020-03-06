@@ -1,21 +1,45 @@
-﻿using ConsoleClient.Clients;
+﻿using ConsoleClient.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleClient.Services
 {
     public class StudentService : IStudentService
     {
-        private readonly IApiClient _apiClient;
-
-        public StudentService(IApiClient apiClient)
+        public int? GetHighestAttendanceYear(IReadOnlyCollection<Student> students)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+            if (students == null || !students.Any())
+            {
+                return null;
+            }
+
+            var attendanceYears = new List<int>();
+
+            foreach (var student in students)
+            {
+                attendanceYears.AddRange(GetRangeValues(student.StartYear, student.EndYear));
+            }
+
+            var grouped = attendanceYears.GroupBy(x => x);
+            var yearsWithCount = grouped.Select(x => (x.Key, x.Count()));
+            var ordered = yearsWithCount.OrderByDescending(x => x.Item2).ThenBy(x => x.Key);
+            var highestAttendanceYear = ordered.First().Key;
+
+            return highestAttendanceYear;
         }
 
-        public int GetHighestAttendanceYear()
+        private IEnumerable<int> GetRangeValues(int start, int end)
         {
-            throw new NotImplementedException();
+            if (start > end)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), "Start value is bigger than end value");
+            }
+
+            for (int i = start; i <= end; i++)
+            {
+                yield return i;
+            }
         }
 
         public int GetHighestGPAYear()

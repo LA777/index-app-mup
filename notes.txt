@@ -1,0 +1,15 @@
+
+
+
+
+http://apitest.sertifi.net/index-app-mup.html
+
+
+Write a program (it can be console, web, Windows form, etc..) to query the REST endpoint and calculate the following:
+
+1.      The year which saw the highest attendance – if there are ties, display the earliest year
+2.      The year with highest overall GPA
+3.      Top 10 students with highest overall GPA
+4.      Student with the largest difference between their minimum and maximum GPA
+
+Try to keep your implementation clean.  Core of the application must be written in C#.  We expect the submission to include unit tests.
