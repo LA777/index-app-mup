@@ -24,7 +24,7 @@ namespace Tests
         public ApiClientTests()
         {
             _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
-            _httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object); // Set the FakeHttpMessageHandler as HttpClient's inner handler
+            _httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object);
             _sut = new ApiClient(_httpClientMock.Object);
         }
 
