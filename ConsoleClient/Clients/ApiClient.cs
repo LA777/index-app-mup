@@ -28,8 +28,7 @@ namespace ConsoleClient.Clients
 
             await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
             var jsonSerializerOptions = new JsonSerializerOptions { AllowTrailingCommas = true };
-            var students = await JsonSerializer.DeserializeAsync<IEnumerable<Student>>(contentStream,
-                jsonSerializerOptions);
+            var students = await JsonSerializer.DeserializeAsync<IEnumerable<Student>>(contentStream, jsonSerializerOptions);
 
             return students;
 

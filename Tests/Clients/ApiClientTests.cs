@@ -8,12 +8,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using Tests.Clients;
 using Xunit;
 
-namespace Tests
+namespace Tests.Clients
 {
     public class ApiClientTests : TestBase
     {
@@ -33,7 +31,6 @@ namespace Tests
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
             var studentsJson = JsonSerializer.Serialize(students);
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var httpRequestMessage = (HttpRequestMessage)null;
             var expectedMethod = HttpMethod.Get;
             var expectedUrl = "http://apitest.sertifi.net/api/Students";
@@ -58,6 +55,31 @@ namespace Tests
             _fakeHttpMessageHandler.Verify(x => x.SendAsync(It.IsAny<HttpRequestMessage>()), Times.Once);
             httpRequestMessage?.Method.Should().Be(expectedMethod);
             httpRequestMessage?.RequestUri.Should().Be(expectedUrl);
+        }
+
+        [Fact]
+        public async Task GetStudents_Should_Throw_Exception_If_Response_StatusCode_Is_Not_Success()
+        {
+            // Arrange
+            var students = Fixture.CreateMany<Student>().ToList();
+            var studentsJson = JsonSerializer.Serialize(students);
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent(studentsJson),
+                StatusCode = HttpStatusCode.Unauthorized
+            };
+
+            _fakeHttpMessageHandler.
+                Setup(x => x.
+                    SendAsync(It.IsAny<HttpRequestMessage>()))
+                .ReturnsAsync(httpResponseMessage);
+
+            // Act and assert
+            await Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await _sut.GetStudentsAsync();
+            });
         }
     }
 }
