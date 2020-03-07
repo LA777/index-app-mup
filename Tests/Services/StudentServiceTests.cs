@@ -59,6 +59,49 @@ namespace Tests.Clients
             result.Should().BeEquivalentTo(expectedResult);
         }
 
+        [Fact]
+        public void GetStudentIdMostInconsistent_Should_Retrun_Student_Id_Most_Inconsistent()
+        {
+            // Arrange
+            var students = GetStudentsMostInconsistent().ToList();
+            var expectedResult = 7;
+
+            // Act
+            var result = _sut.GetStudentIdMostInconsistent(students);
+
+            // Assert
+            result.Should().Be(expectedResult);
+        }
+
+        private IEnumerable<Student> GetStudentsMostInconsistent()
+        {
+            var yearRanges = new List<(int, int, int, decimal[])> {
+                (1, 2001, 2002, new[] { 2.4m, 3.2m }),
+                (2, 2006, 2007, new[] { 2.7m, 3.2m }),
+                (3, 2010, 2011, new[] { 2.4m, 3.2m }),
+                (4, 2005, 2006, new[] { 2.9m, 3.2m }),
+                (5, 2003, 2004, new[] { 2.4m, 3.2m }),
+                (6, 2005, 2006, new[] { 2.4m, 3.2m }),
+                (7, 2005, 2006, new[] { 1.4m, 4.4m }),
+                (8, 2008, 2009, new[] { 2.4m, 3.2m }),
+                (9, 2008, 2009, new[] { 2.4m, 3.2m }),
+                (10, 2008, 2009, new[] { 2.4m, 4.2m }),
+                (18, 2008, 2009, new[] { 2.4m, 3.2m }),
+                (28, 2008, 2009, new[] { 4.4m, 3.2m })
+            };
+
+            foreach (var yearRange in yearRanges)
+            {
+                var student = Fixture.Create<Student>();
+                student.Id = yearRange.Item1;
+                student.StartYear = yearRange.Item2;
+                student.EndYear = yearRange.Item3;
+                student.GPARecord = yearRange.Item4;
+
+                yield return student;
+            }
+        }
+
         private IEnumerable<Student> GetStudentsHighestGPA()
         {
             var yearRanges = new List<(int, int, int, decimal[])> {

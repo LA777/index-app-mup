@@ -38,7 +38,10 @@ namespace ConsoleClient.Services
 
 
             //var highestAttendanceYear = _studentService.GetHighestAttendanceYear(students);
-            var highestGPAYear = _studentService.GetHighestGPAYear(students);
+            //var highestGPAYear = _studentService.GetHighestGPAYear(students);
+
+
+            var ddd = _studentService.GetStudentIdMostInconsistent(students);
             //_logger.LogDebug($"highestAttendanceYear: {highestAttendanceYear}");
 
         }

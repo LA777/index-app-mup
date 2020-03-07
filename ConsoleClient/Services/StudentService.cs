@@ -88,9 +88,9 @@ namespace ConsoleClient.Services
         }
 
         /// <summary>
-        /// Returns top 10 students with highest overall GPA
+        /// Returns IDs of the top 10 students with highest overall GPA
         /// </summary>
-        /// <returns>List of students</returns>
+        /// <returns>List of student's IDs</returns>
         public IEnumerable<int> GetTopStudentsWithHighestGPA(IReadOnlyCollection<Student> students)
         {
             var dict = new Dictionary<int, decimal>();
@@ -105,9 +105,27 @@ namespace ConsoleClient.Services
             return tops;
         }
 
+        /// <summary>
+        /// Returns student ID with the largest difference between their minimum and maximum GPA
+        /// </summary>
+        /// <param name="students"></param>
+        /// <returns>Student ID</returns>
         public int GetStudentIdMostInconsistent(IReadOnlyCollection<Student> students)
         {
-            throw new NotImplementedException();
+            var dict = new Dictionary<int, decimal>();
+
+            foreach (var student in students)
+            {
+                var min = student.GPARecord.Min();
+                var max = student.GPARecord.Max();
+                var diff = max - min;
+                dict[student.Id] = diff;
+            }
+
+            var ordered = dict.OrderByDescending(x => x.Value);
+            var id = ordered.First().Key;
+
+            return id;
         }
     }
 }
