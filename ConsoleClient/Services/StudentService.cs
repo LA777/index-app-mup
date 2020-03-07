@@ -9,9 +9,14 @@ namespace ConsoleClient.Services
     {
         public int? GetHighestAttendanceYear(IReadOnlyCollection<Student> students)
         {
-            if (students == null || !students.Any())
+            if (students == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(students));
+            }
+
+            if (!students.Any())
+            {
+                throw new ArgumentException("Collection is empty.", nameof(students));
             }
 
             var attendanceYears = new List<int>();
