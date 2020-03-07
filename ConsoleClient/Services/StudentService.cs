@@ -7,6 +7,12 @@ namespace ConsoleClient.Services
 {
     public class StudentService : IStudentService
     {
+        /// <summary>
+        /// Return the year which saw the highest attendance – if there are ties,
+        /// display the earliest year
+        /// </summary>
+        /// <param name="students"></param>
+        /// <returns>Year</returns>
         public int GetHighestAttendanceYear(IReadOnlyCollection<Student> students)
         {
             if (students == null)
@@ -47,9 +53,24 @@ namespace ConsoleClient.Services
             }
         }
 
-        public int GetHighestGPAYear()
+        /// <summary>
+        /// Returns the year with highest overall GPA
+        /// </summary>
+        /// <param name="students"></param>
+        /// <returns>Year</returns>
+        public int GetHighestGPAYear(IReadOnlyCollection<Student> students)
         {
-            throw new NotImplementedException();
+            var attendanceYears = new List<(int, float)>();
+
+            foreach (var student in students)
+            {
+                var yearsRange = GetRangeValues(student.StartYear, student.EndYear);
+                var gpaResords = student.GPARecord;
+
+                //attendanceYears.AddRange();
+            }
+
+            return -1;
         }
 
         public int GetStudentIdMostInconsistent()

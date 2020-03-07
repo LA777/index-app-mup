@@ -7,7 +7,7 @@ namespace ConsoleClient.Services
     {
         int GetHighestAttendanceYear(IReadOnlyCollection<Student> students);
 
-        int GetHighestGPAYear();
+        int GetHighestGPAYear(IReadOnlyCollection<Student> students);
 
         IEnumerable<int> GetTopStudentsWithHighestGPA();
 
