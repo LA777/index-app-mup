@@ -28,8 +28,7 @@ namespace Tests.Clients
             var result = _sut.GetHighestAttendanceYear(students);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Value.Should().Be(expectedResult);
+            result.Should().Be(expectedResult);
         }
 
         private IEnumerable<Student> GetStudents()
@@ -42,7 +41,7 @@ namespace Tests.Clients
                 (2003, 2004),
                 (2005, 2005),
                 (2005, 2006),
-                (2008, 2009),
+                (2008, 2009)
             };
 
             foreach (var yearRange in yearRanges)
@@ -54,7 +53,5 @@ namespace Tests.Clients
                 yield return student;
             }
         }
-
-
     }
 }

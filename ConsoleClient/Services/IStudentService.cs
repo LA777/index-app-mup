@@ -5,7 +5,7 @@ namespace ConsoleClient.Services
 {
     public interface IStudentService
     {
-        int? GetHighestAttendanceYear(IReadOnlyCollection<Student> students);
+        int GetHighestAttendanceYear(IReadOnlyCollection<Student> students);
 
         int GetHighestGPAYear();
 

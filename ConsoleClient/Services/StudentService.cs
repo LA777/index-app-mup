@@ -7,7 +7,7 @@ namespace ConsoleClient.Services
 {
     public class StudentService : IStudentService
     {
-        public int? GetHighestAttendanceYear(IReadOnlyCollection<Student> students)
+        public int GetHighestAttendanceYear(IReadOnlyCollection<Student> students)
         {
             if (students == null)
             {
