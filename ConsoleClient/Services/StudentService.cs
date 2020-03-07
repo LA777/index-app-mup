@@ -66,6 +66,10 @@ namespace ConsoleClient.Services
             {
                 var yearsRange = GetRangeValues(student.StartYear, student.EndYear);
                 var gpaResords = student.GPARecord;
+                if (yearsRange.Count() != gpaResords.Count())
+                {
+                    throw new ArgumentOutOfRangeException();// TODO LA - Create custom exception
+                }
 
                 //attendanceYears.AddRange();
             }
