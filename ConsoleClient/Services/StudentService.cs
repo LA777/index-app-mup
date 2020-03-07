@@ -87,12 +87,25 @@ namespace ConsoleClient.Services
             return highestGPAYear;
         }
 
-        public int GetStudentIdMostInconsistent()
+        /// <summary>
+        /// Returns top 10 students with highest overall GPA
+        /// </summary>
+        /// <returns>List of students</returns>
+        public IEnumerable<int> GetTopStudentsWithHighestGPA(IReadOnlyCollection<Student> students)
         {
-            throw new NotImplementedException();
+            var dict = new Dictionary<int, decimal>();
+
+            foreach (var student in students)
+            {
+                dict[student.Id] = student.GPARecord.Sum();
+            }
+
+            var tops = dict.OrderByDescending(x => x.Value).Take(10).Select(x => x.Key);
+
+            return tops;
         }
 
-        public IEnumerable<int> GetTopStudentsWithHighestGPA()
+        public int GetStudentIdMostInconsistent(IReadOnlyCollection<Student> students)
         {
             throw new NotImplementedException();
         }

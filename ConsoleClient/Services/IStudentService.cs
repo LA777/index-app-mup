@@ -9,8 +9,8 @@ namespace ConsoleClient.Services
 
         int GetHighestGPAYear(IReadOnlyCollection<Student> students);
 
-        IEnumerable<int> GetTopStudentsWithHighestGPA();
+        IEnumerable<int> GetTopStudentsWithHighestGPA(IReadOnlyCollection<Student> students);
 
-        int GetStudentIdMostInconsistent();
+        int GetStudentIdMostInconsistent(IReadOnlyCollection<Student> students);
     }
 }
