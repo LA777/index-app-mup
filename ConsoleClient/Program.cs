@@ -1,47 +1,69 @@
 ﻿using ConsoleClient.Clients;
+using ConsoleClient.Options;
 using ConsoleClient.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ConsoleClient
 {
     class Program
     {
-        static async Task<int> Main(string[] args)
+        private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", false, true)
+            .Build();
+
+        static async Task Main(string[] args)
+        {
+            var host = CreateBuilder().Build();
+            using var serviceScope = host.Services.CreateScope();
+            var services = serviceScope.ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<Program>>();
+
+            try
+            {
+                logger.LogDebug("Start application.");
+
+                var workflowService = services.GetRequiredService<IWorkflowService>();
+                await workflowService.DoTestTaskAsync();
+
+                logger.LogDebug("Exit application.");
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "An error occurred.");
+            }
+        }
+
+        private static IHostBuilder CreateBuilder()
         {
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddOptions();
+                    services.Configure<AppSettings>(Configuration);
                     services.AddHttpClient<ApiClient>();
-                    services.AddSingleton<ApiClientFactory>();
+                    services.AddSingleton<IApiClientFactory, ApiClientFactory>();
                     services.AddTransient<IStudentService, StudentService>();
-                }).UseConsoleLifetime();
-
-            var host = builder.Build();
-
-            using (var serviceScope = host.Services.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-
-                try
+                    services.AddTransient<IWorkflowService, WorkflowService>();
+                })
+                .ConfigureLogging(logging =>
                 {
-                    var studentService = services.GetRequiredService<IStudentService>();
-                    var result = await studentService.GetHighestAttendanceYear();
+                    logging.AddFilter("Microsoft", LogLevel.Warning);
+                    logging.AddFilter("System", LogLevel.Warning);
+                    logging.AddFilter("ConsoleClient.Program", LogLevel.Debug);
+                    logging.AddConsole(o => o.TimestampFormat = "[yyyy.MM.dd HH:mm:ss] ");
+                    logging.AddDebug();
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                })
+                .UseConsoleLifetime();
 
-                    Console.WriteLine(result);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-
-                    logger.LogError(ex, "An error occurred.");
-                }
-            }
-
-            return 0;
+            return builder;
         }
     }
 }

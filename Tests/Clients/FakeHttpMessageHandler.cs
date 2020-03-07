@@ -7,14 +7,14 @@ namespace Tests.Clients
 {
     public class FakeHttpMessageHandler : HttpMessageHandler
     {
-        public virtual async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)
+        public virtual async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            throw new NotImplementedException("Now we can setup this method in the unit tests since its virtual");
+            throw new NotImplementedException("We can setup this method in the unit tests since its virtual");
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return await SendAsync(request, default, cancellationToken);
+            return await SendAsync(request);
         }
     }
 }

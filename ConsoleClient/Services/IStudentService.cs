@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ConsoleClient.Models;
+using System.Collections.Generic;
 
 namespace ConsoleClient.Services
 {
     public interface IStudentService
     {
-        Task<int> GetHighestAttendanceYear();
+        int GetHighestAttendanceYear(IReadOnlyCollection<Student> students);
 
-        Task<int> GetHighestGPAYear();
+        int GetHighestGPAYear(IReadOnlyCollection<Student> students);
 
-        Task<IEnumerable<int>> GetTopStudentsWithHighestGPA();
+        IEnumerable<int> GetTopStudentsWithHighestGPA(IReadOnlyCollection<Student> students);
 
-        Task<int> GetStudentIdMostInconsistent();
+        int GetStudentIdMostInconsistent(IReadOnlyCollection<Student> students);
     }
 }
