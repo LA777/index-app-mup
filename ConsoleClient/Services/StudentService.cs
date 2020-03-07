@@ -60,21 +60,31 @@ namespace ConsoleClient.Services
         /// <returns>Year</returns>
         public int GetHighestGPAYear(IReadOnlyCollection<Student> students)
         {
-            var attendanceYears = new List<(int, float)>();
+            var dict = new Dictionary<int, decimal>();
 
             foreach (var student in students)
             {
-                var yearsRange = GetRangeValues(student.StartYear, student.EndYear);
-                var gpaResords = student.GPARecord;
+                var yearsRange = GetRangeValues(student.StartYear, student.EndYear).ToList();
+                var gpaResords = student.GPARecord.ToList();
                 if (yearsRange.Count() != gpaResords.Count())
                 {
                     throw new ArgumentOutOfRangeException();// TODO LA - Create custom exception
                 }
 
-                //attendanceYears.AddRange();
+                for (int i = 0; i < gpaResords.Count; i++)
+                {
+                    var year = yearsRange[i];
+                    decimal gpa = gpaResords[i];
+                    decimal val = dict.GetValueOrDefault(year);
+                    decimal sum = val + gpa;
+                    dict[year] = sum;
+                }
             }
 
-            return -1;
+            var ordered = dict.OrderByDescending(x => x.Value);
+            var highestGPAYear = ordered.First().Key;
+
+            return highestGPAYear;
         }
 
         public int GetStudentIdMostInconsistent()

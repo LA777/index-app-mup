@@ -28,8 +28,18 @@ namespace ConsoleClient.Services
             _logger.LogDebug(json);
 
 
-            var highestAttendanceYear = _studentService.GetHighestAttendanceYear(students);
-            _logger.LogDebug($"highestAttendanceYear: {highestAttendanceYear}");
+            //double a = 3.3;
+            //double b = 4.8;
+            //double c = a + b;
+
+            //float a1 = 3.3f;
+            //float b1 = 4.8f;
+            //float c1 = a1 + b1;
+
+
+            //var highestAttendanceYear = _studentService.GetHighestAttendanceYear(students);
+            var highestGPAYear = _studentService.GetHighestGPAYear(students);
+            //_logger.LogDebug($"highestAttendanceYear: {highestAttendanceYear}");
 
         }
     }

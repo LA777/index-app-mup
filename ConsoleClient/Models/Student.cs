@@ -13,11 +13,11 @@ namespace ConsoleClient.Models
 
         public int EndYear { get; set; }
 
-        public IEnumerable<float> GPARecord { get; set; }
+        public IEnumerable<decimal> GPARecord { get; set; }
 
         public Student()
         {
-            GPARecord = Enumerable.Empty<float>();
+            GPARecord = Enumerable.Empty<decimal>();
         }
     }
 }
