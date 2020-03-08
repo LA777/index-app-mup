@@ -2,11 +2,14 @@ using AutoFixture;
 using ConsoleClient.Clients;
 using ConsoleClient.Models;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
@@ -22,7 +25,9 @@ namespace Tests.Clients
         {
             _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
             var httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object);
-            _sut = new ApiClient(httpClientMock.Object);
+            var loggerMock = new Mock<ILogger<ApiClient>>();
+
+            _sut = new ApiClient(httpClientMock.Object, loggerMock.Object);
         }
 
         [Fact]
@@ -68,6 +73,56 @@ namespace Tests.Clients
             {
                 Content = new StringContent(studentsJson),
                 StatusCode = HttpStatusCode.Unauthorized
+            };
+
+            _fakeHttpMessageHandler.
+                Setup(x => x.
+                    SendAsync(It.IsAny<HttpRequestMessage>()))
+                .ReturnsAsync(httpResponseMessage);
+
+            // Act and assert
+            await Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await _sut.GetStudentsAsync();
+            });
+        }
+
+        [Fact]
+        public async Task GetStudents_Should_Throw_Exception_If_Response_ContentType_Is_Not_ApplicationJson()
+        {
+            // Arrange
+            var students = Fixture.CreateMany<Student>().ToList();
+            var studentsJson = JsonSerializer.Serialize(students);
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent(studentsJson, Encoding.UTF8, MediaTypeNames.Application.Xml),
+                StatusCode = HttpStatusCode.OK
+            };
+
+            _fakeHttpMessageHandler.
+                Setup(x => x.
+                    SendAsync(It.IsAny<HttpRequestMessage>()))
+                .ReturnsAsync(httpResponseMessage);
+
+            // Act and assert
+            await Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await _sut.GetStudentsAsync();
+            });
+        }
+
+        [Fact]
+        public async Task GetStudents_Should_Throw_Exception_If_Response_ContentType_Is_Null()
+        {
+            // Arrange
+            var students = Fixture.CreateMany<Student>().ToList();
+            var studentsJson = JsonSerializer.Serialize(students);
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent(studentsJson, Encoding.UTF8, null),
+                StatusCode = HttpStatusCode.OK
             };
 
             _fakeHttpMessageHandler.
