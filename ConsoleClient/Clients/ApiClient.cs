@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text.Json;
@@ -29,11 +30,11 @@ namespace ConsoleClient.Clients
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
             var contentType = httpResponseMessage.Content.Headers.ContentType.MediaType;
-            _logger.LogInformation($"Response - StatusCode: {httpResponseMessage.StatusCode}; ContentType: {contentType}.");
+            _logger.LogInformation($"Response - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}; ContentType: {contentType}.");
 
             if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
-                throw new Exception($"Request failed - StatusCode: {httpResponseMessage.StatusCode}");
+                throw new Exception($"Request failed - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}");
             }
 
             if (string.IsNullOrEmpty(contentType) || contentType != MediaTypeNames.Application.Json)
@@ -58,11 +59,16 @@ namespace ConsoleClient.Clients
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
-            _logger.LogInformation($"Response - StatusCode: {httpResponseMessage.StatusCode}.");
+            _logger.LogInformation($"Response - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}.");
             if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
-                throw new Exception($"Request failed - StatusCode: {httpResponseMessage.StatusCode}");
+                throw new Exception($"Request failed - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}");
             }
+        }
+
+        private string GetStatusCodeAsNumberAndString(HttpStatusCode statusCode)
+        {
+            return $"{(int)statusCode} {statusCode}";
         }
     }
 }
