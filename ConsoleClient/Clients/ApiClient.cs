@@ -50,7 +50,6 @@ namespace ConsoleClient.Clients
             return students;
         }
 
-        // TODO LA - Cover with Unit Tests
         public async Task SubmitStudentAggregateAsync(StudentAggregate studentAggregate)
         {
             var httpMethod = HttpMethod.Put;

@@ -60,8 +60,9 @@ namespace Tests.Clients
             // Assert
             result.Should().BeEquivalentTo(students);
             _fakeHttpMessageHandler.Verify(x => x.SendAsync(It.IsAny<HttpRequestMessage>()), Times.Once);
-            httpRequestMessage?.Method.Should().Be(expectedMethod);
-            httpRequestMessage?.RequestUri.Should().Be(expectedUrl);
+            httpRequestMessage.Should().NotBeNull();
+            httpRequestMessage.Method.Should().Be(expectedMethod);
+            httpRequestMessage.RequestUri.Should().Be(expectedUrl);
         }
 
         [Fact]
@@ -148,10 +149,11 @@ namespace Tests.Clients
         {
             // Arrange
             var studentAggregate = Fixture.Create<StudentAggregate>();
-
             var httpRequestMessage = (HttpRequestMessage)null;
             var expectedMethod = HttpMethod.Put;
             var expectedUrl = "http://apitest.sertifi.net/api/StudentAggregate";
+            var json = JsonSerializer.Serialize(studentAggregate);
+            var expectedContent = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
             var httpResponseMessage = new HttpResponseMessage
             {
@@ -169,11 +171,35 @@ namespace Tests.Clients
 
             // Assert
             _fakeHttpMessageHandler.Verify(x => x.SendAsync(It.IsAny<HttpRequestMessage>()), Times.Once);
-            httpRequestMessage?.Method.Should().Be(expectedMethod);
-            httpRequestMessage?.RequestUri.Should().Be(expectedUrl);
+            httpRequestMessage.Should().NotBeNull();
+            httpRequestMessage.Method.Should().Be(expectedMethod);
+            httpRequestMessage.RequestUri.Should().Be(expectedUrl);
+            httpRequestMessage.Content.Should().BeEquivalentTo(expectedContent);
+        }
+
+        [Fact]
+        public async Task SubmitStudentAggregateAsync_Should_Throw_Exception_If_Response_StatusCode_Is_Not_Success()
+        {
+            // Arrange
+            var studentAggregate = Fixture.Create<StudentAggregate>();
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.NetworkAuthenticationRequired
+            };
+
+            _fakeHttpMessageHandler.
+                Setup(x => x.
+                    SendAsync(It.IsAny<HttpRequestMessage>()))
+                .ReturnsAsync(httpResponseMessage);
+
+            // Act and assert
+            await Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await _sut.SubmitStudentAggregateAsync(studentAggregate);
+            });
         }
 
         #endregion
-
     }
 }
