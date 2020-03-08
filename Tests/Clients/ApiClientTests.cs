@@ -1,8 +1,10 @@
 using AutoFixture;
 using ConsoleClient.Clients;
 using ConsoleClient.Models;
+using ConsoleClient.Options;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Linq;
@@ -20,14 +22,17 @@ namespace Tests.Clients
     {
         private readonly ApiClient _sut;
         private readonly Mock<FakeHttpMessageHandler> _fakeHttpMessageHandler;
+        private readonly Mock<IOptionsMonitor<ApiClientOptions>> _optionsMonitorMock;
 
         public ApiClientTests()
         {
             _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
             var httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object);
+            _optionsMonitorMock = new Mock<IOptionsMonitor<ApiClientOptions>>();
+
             var loggerMock = new Mock<ILogger<ApiClient>>();
 
-            _sut = new ApiClient(httpClientMock.Object, loggerMock.Object);
+            _sut = new ApiClient(httpClientMock.Object, _optionsMonitorMock.Object, loggerMock.Object);
         }
 
         #region GetStudentsAsyncTests

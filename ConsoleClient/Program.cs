@@ -48,7 +48,7 @@ namespace ConsoleClient
                     services.AddOptions();
                     services.Configure<ApiClientOptions>(Configuration.GetSection("ApiClient"));
                     services.Configure<UserDataOptions>(Configuration.GetSection("UserData"));
-                    services.AddHttpClient<ApiClient>();
+                    services.AddHttpClient<ApiClient>(s => s.BaseAddress = new Uri(Configuration["ApiClient:baseUrl"]));
                     services.AddSingleton<IApiClientFactory, ApiClientFactory>();
                     services.AddTransient<IStudentService, StudentService>();
                     services.AddTransient<IWorkflowService, WorkflowService>();

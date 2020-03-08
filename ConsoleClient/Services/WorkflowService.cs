@@ -41,7 +41,7 @@ namespace ConsoleClient.Services
 
             _logger.LogInformation($"studentAggregate: {studentAggregate}");
 
-            await apiClient.SubmitStudentAggregateAsync(studentAggregate);
+            //await apiClient.SubmitStudentAggregateAsync(studentAggregate);
         }
     }
 }

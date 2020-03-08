@@ -1,5 +1,7 @@
 ﻿using ConsoleClient.Models;
+using ConsoleClient.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,19 +17,21 @@ namespace ConsoleClient.Clients
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<ApiClient> _logger;
+        private readonly ApiClientOptions _options;
 
-        public ApiClient(HttpClient httpClient, ILogger<ApiClient> logger)
+        public ApiClient(HttpClient httpClient, IOptionsMonitor<ApiClientOptions> optionsAccessor, ILogger<ApiClient> logger)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            var accessor = optionsAccessor ?? throw new ArgumentNullException(nameof(optionsAccessor));
+            _options = accessor.CurrentValue ?? throw new ArgumentNullException(nameof(accessor.CurrentValue));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<IReadOnlyCollection<Student>> GetStudentsAsync()
         {
             var httpMethod = HttpMethod.Get;
-            var requestUri = "http://apitest.sertifi.net/api/Students";// TODO LA - move URL to appsettings???
-            var httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri);
-            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}.");
+            var httpRequestMessage = new HttpRequestMessage(httpMethod, _options.GetStudentsUri);
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {_httpClient.BaseAddress.AbsoluteUri}{_options.GetStudentsUri}.");
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
             var contentType = httpResponseMessage.Content.Headers.ContentType.MediaType;
