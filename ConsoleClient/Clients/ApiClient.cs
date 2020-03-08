@@ -43,8 +43,7 @@ namespace ConsoleClient.Clients
 
             var contentJson = await httpResponseMessage.Content.ReadAsStringAsync();
             _logger.LogInformation($"Request content: {contentJson}");
-            var jsonSerializerOptions = new JsonSerializerOptions { AllowTrailingCommas = true };
-            var students = JsonSerializer.Deserialize<IReadOnlyCollection<Student>>(contentJson, jsonSerializerOptions);
+            var students = JsonSerializer.Deserialize<IReadOnlyCollection<Student>>(contentJson);
 
             return students;
         }
