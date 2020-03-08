@@ -25,11 +25,11 @@ namespace ConsoleClient.Clients
             var httpMethod = HttpMethod.Get;
             var requestUri = "http://apitest.sertifi.net/api/Students";// TODO LA - move URL to appsettings???
             var httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri);
-            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}");
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}.");
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
             var contentType = httpResponseMessage.Content.Headers.ContentType.MediaType;
-            _logger.LogInformation($"Response - StatusCode: {httpResponseMessage.StatusCode}; ContentType: {contentType}");
+            _logger.LogInformation($"Response - StatusCode: {httpResponseMessage.StatusCode}; ContentType: {contentType}.");
 
             if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
@@ -42,25 +42,26 @@ namespace ConsoleClient.Clients
             }
 
             var contentJson = await httpResponseMessage.Content.ReadAsStringAsync();
-            _logger.LogInformation($"Request content: {contentJson}");
+            _logger.LogInformation($"Request content: {contentJson}.");
             var students = JsonSerializer.Deserialize<IReadOnlyCollection<Student>>(contentJson);
 
             return students;
         }
 
-        // TODO LA - Cove with Unit Tests
-        public async Task SubmitStudentAggregateAsync(IEnumerable<StudentAggregate> studentAggregates)
+        // TODO LA - Cover with Unit Tests
+        public async Task SubmitStudentAggregateAsync(StudentAggregate studentAggregates)
         {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, "http://apitest.sertifi.net/api/StudentAggregate");// TODO LA - move URL to appsettings???
+            var httpMethod = HttpMethod.Put;
+            var requestUri = "http://apitest.sertifi.net/api/StudentAggregate";// TODO LA - move URL to appsettings???
+            var httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri);
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}.");
+
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
-            if (httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
+            _logger.LogInformation($"Response - StatusCode: {httpResponseMessage.StatusCode}.");
+            if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
             {
-                var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                throw new Exception($"Response status code: {httpResponseMessage.StatusCode}");
+                throw new Exception($"Request failed - StatusCode: {httpResponseMessage.StatusCode}");
             }
         }
     }

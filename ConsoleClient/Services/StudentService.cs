@@ -47,7 +47,8 @@ namespace ConsoleClient.Services
                 var gpaRecords = student.GPARecord.ToList();
                 if (yearsRange.Count != gpaRecords.Count)
                 {
-                    throw new ArgumentOutOfRangeException($"{nameof(gpaRecords)}, {nameof(gpaRecords)}", "Years range is not equal to GPA records.");
+                    throw new ArgumentOutOfRangeException($"{nameof(gpaRecords)}, {nameof(gpaRecords)}",
+                        "Years range is not equal to GPA records.");
                 }
 
                 for (var i = 0; i < gpaRecords.Count; i++)
