@@ -46,7 +46,8 @@ namespace ConsoleClient
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddOptions();
-                    services.Configure<AppSettings>(Configuration);
+                    services.Configure<ApiClientOptions>(Configuration.GetSection("ApiClient"));
+                    services.Configure<UserDataOptions>(Configuration.GetSection("UserData"));
                     services.AddHttpClient<ApiClient>();
                     services.AddSingleton<IApiClientFactory, ApiClientFactory>();
                     services.AddTransient<IStudentService, StudentService>();
