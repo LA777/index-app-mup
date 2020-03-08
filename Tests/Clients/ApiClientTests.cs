@@ -30,8 +30,10 @@ namespace Tests.Clients
             _sut = new ApiClient(httpClientMock.Object, loggerMock.Object);
         }
 
+        #region GetStudentsAsyncTests
+
         [Fact]
-        public async Task GetStudents_Should_Call_HttpClient_And_Return_Students_List()
+        public async Task GetStudentsAsync_Should_Call_HttpClient_And_Return_Students_List()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
@@ -63,7 +65,7 @@ namespace Tests.Clients
         }
 
         [Fact]
-        public async Task GetStudents_Should_Throw_Exception_If_Response_StatusCode_Is_Not_Success()
+        public async Task GetStudentsAsync_Should_Throw_Exception_If_Response_StatusCode_Is_Not_Success()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
@@ -88,7 +90,7 @@ namespace Tests.Clients
         }
 
         [Fact]
-        public async Task GetStudents_Should_Throw_Exception_If_Response_ContentType_Is_Not_ApplicationJson()
+        public async Task GetStudentsAsync_Should_Throw_Exception_If_Response_ContentType_Is_Not_ApplicationJson()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
@@ -113,7 +115,7 @@ namespace Tests.Clients
         }
 
         [Fact]
-        public async Task GetStudents_Should_Throw_Exception_If_Response_ContentType_Is_Null()
+        public async Task GetStudentsAsync_Should_Throw_Exception_If_Response_ContentType_Is_Null()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
@@ -136,5 +138,42 @@ namespace Tests.Clients
                 await _sut.GetStudentsAsync();
             });
         }
+
+        #endregion
+
+        #region SubmitStudentAggregateAsync
+
+        [Fact]
+        public async Task SubmitStudentAggregateAsync_Should_Call_HttpClient_And_Submit_Data()
+        {
+            // Arrange
+            var studentAggregate = Fixture.Create<StudentAggregate>();
+
+            var httpRequestMessage = (HttpRequestMessage)null;
+            var expectedMethod = HttpMethod.Put;
+            var expectedUrl = "http://apitest.sertifi.net/api/StudentAggregate";
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.NoContent
+            };
+
+            _fakeHttpMessageHandler.
+                Setup(x => x.
+                    SendAsync(It.IsAny<HttpRequestMessage>()))
+                .Callback((HttpRequestMessage m) => httpRequestMessage = m)
+                .ReturnsAsync(httpResponseMessage);
+
+            // Act
+            await _sut.SubmitStudentAggregateAsync(studentAggregate);
+
+            // Assert
+            _fakeHttpMessageHandler.Verify(x => x.SendAsync(It.IsAny<HttpRequestMessage>()), Times.Once);
+            httpRequestMessage?.Method.Should().Be(expectedMethod);
+            httpRequestMessage?.RequestUri.Should().Be(expectedUrl);
+        }
+
+        #endregion
+
     }
 }

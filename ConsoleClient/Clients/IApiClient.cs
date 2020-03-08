@@ -8,6 +8,6 @@ namespace ConsoleClient.Clients
     {
         Task<IReadOnlyCollection<Student>> GetStudentsAsync();
 
-        Task SubmitStudentAggregateAsync(StudentAggregate studentAggregates);
+        Task SubmitStudentAggregateAsync(StudentAggregate studentAggregate);
     }
 }

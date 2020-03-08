@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -50,12 +51,14 @@ namespace ConsoleClient.Clients
         }
 
         // TODO LA - Cover with Unit Tests
-        public async Task SubmitStudentAggregateAsync(StudentAggregate studentAggregates)
+        public async Task SubmitStudentAggregateAsync(StudentAggregate studentAggregate)
         {
             var httpMethod = HttpMethod.Put;
             var requestUri = "http://apitest.sertifi.net/api/StudentAggregate";// TODO LA - move URL to appsettings???
             var httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri);
-            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}.");
+            var json = JsonSerializer.Serialize(studentAggregate);
+            httpRequestMessage.Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}; Content {json}.");
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 

@@ -19,6 +19,7 @@ namespace ConsoleClient.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        // TODO LA - Cover with Unit Tests
         public async Task DoTestTaskAsync()
         {
             var apiClient = _apiClientFactory.Create();
