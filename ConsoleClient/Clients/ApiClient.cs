@@ -33,7 +33,7 @@ namespace ConsoleClient.Clients
             var contentType = httpResponseMessage.Content.Headers.ContentType.MediaType;
             _logger.LogInformation($"Response - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}; ContentType: {contentType}.");
 
-            if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception($"Request failed - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}");
             }
@@ -62,7 +62,7 @@ namespace ConsoleClient.Clients
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Response - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}.");
-            if (!httpResponseMessage.IsSuccessStatusCode)// TODO LA - check for application/json???
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception($"Request failed - StatusCode: {GetStatusCodeAsNumberAndString(httpResponseMessage.StatusCode)}");
             }
