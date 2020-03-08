@@ -26,8 +26,8 @@ namespace ConsoleClient.Services
             var students = await apiClient.GetStudentsAsync();
 
             var highestAttendanceYear = _studentService.GetHighestAttendanceYear(students);
-            var highestGpaYear = _studentService.GetHighestGPAYear(students);
-            var topTenStudentsWithHighestGpa = _studentService.GetTopTenStudentsWithHighestGPA(students);
+            var highestGpaYear = _studentService.GetHighestGpaYear(students);
+            var topTenStudentsWithHighestGpa = _studentService.GetTopTenStudentsWithHighestGpa(students);
             var studentIdMostInconsistent = _studentService.GetStudentIdMostInconsistent(students);
 
             var studentAggregate = new StudentAggregate()

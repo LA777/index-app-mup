@@ -44,7 +44,7 @@ namespace Tests.Clients
 
             var httpResponseMessage = new HttpResponseMessage
             {
-                Content = new StringContent(studentsJson),
+                Content = new StringContent(studentsJson, Encoding.UTF8, MediaTypeNames.Application.Json),
                 StatusCode = HttpStatusCode.OK
             };
 

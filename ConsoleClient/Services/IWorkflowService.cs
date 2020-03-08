@@ -2,7 +2,7 @@
 
 namespace ConsoleClient.Services
 {
-    interface IWorkflowService
+    public interface IWorkflowService
     {
         Task DoTestTaskAsync();
     }

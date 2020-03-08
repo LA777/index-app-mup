@@ -36,7 +36,7 @@ namespace ConsoleClient.Services
         /// </summary>
         /// <param name="students"></param>
         /// <returns>Year</returns>
-        public int GetHighestGPAYear(IReadOnlyCollection<Student> students)
+        public int GetHighestGpaYear(IReadOnlyCollection<Student> students)
         {
             ValidateInputCollection(students);
             var dictionary = new Dictionary<int, decimal>();
@@ -68,7 +68,7 @@ namespace ConsoleClient.Services
         /// Returns IDs of the top 10 students with highest overall GPA
         /// </summary>
         /// <returns>List of student's IDs</returns>
-        public IEnumerable<int> GetTopTenStudentsWithHighestGPA(IReadOnlyCollection<Student> students)
+        public IEnumerable<int> GetTopTenStudentsWithHighestGpa(IReadOnlyCollection<Student> students)
         {
             var dictionary = new Dictionary<int, decimal>();
 
