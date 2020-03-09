@@ -50,7 +50,7 @@ namespace Tests.Services
         {
             // Arrange
             var students = GetStudentsHighestGpa().ToList();
-            var expectedResult = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 28, 10 };
+            var expectedResult = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 28, 10 };
 
             // Act
             var result = _sut.GetTopTenStudentsWithHighestGpa(students);
