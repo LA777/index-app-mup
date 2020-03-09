@@ -1,9 +1,11 @@
 using AutoFixture;
 using ConsoleClient.Clients;
 using ConsoleClient.Models;
+using ConsoleClient.Options;
 using ConsoleClient.Services;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,8 @@ namespace Tests.Services
         private readonly Mock<IApiClientFactory> _apiClientFactoryMock;
         private readonly Mock<IApiClient> _apiClientMock;
         private readonly Mock<IStudentService> _studentServiceMock;
+        private readonly string _name = "test1";
+        private readonly string _email = "test1@test.com";
 
         public WorkflowServiceTests()
         {
@@ -25,8 +29,15 @@ namespace Tests.Services
             var loggerMock = new Mock<ILogger<WorkflowService>>();
             _studentServiceMock = new Mock<IStudentService>();
             _apiClientFactoryMock.Setup(x => x.Create()).Returns(_apiClientMock.Object);
+            var optionsMonitorMock = new Mock<IOptionsMonitor<UserDataOptions>>();
+            var apiClientOptions = new UserDataOptions()
+            {
+                Name = _name,
+                Email = _email
+            };
+            optionsMonitorMock.Setup(x => x.CurrentValue).Returns(apiClientOptions);
 
-            _sut = new WorkflowService(_apiClientFactoryMock.Object, _studentServiceMock.Object, loggerMock.Object);
+            _sut = new WorkflowService(_apiClientFactoryMock.Object, _studentServiceMock.Object, optionsMonitorMock.Object, loggerMock.Object);
         }
 
         [Fact]
@@ -35,8 +46,8 @@ namespace Tests.Services
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
             var studentAggregate = Fixture.Create<StudentAggregate>();
-            studentAggregate.YourName = "test1";
-            studentAggregate.YourEmail = "test1@test.com";
+            studentAggregate.YourName = _name;
+            studentAggregate.YourEmail = _email;
             StudentAggregate resultStudentAggregate = null;
 
             _apiClientMock.Setup(x => x.GetStudentsAsync()).ReturnsAsync(students);

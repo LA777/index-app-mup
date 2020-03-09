@@ -31,7 +31,7 @@ namespace ConsoleClient.Clients
         {
             var httpMethod = HttpMethod.Get;
             var httpRequestMessage = new HttpRequestMessage(httpMethod, _options.GetStudentsUri);
-            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {_httpClient.BaseAddress.AbsoluteUri}{_options.GetStudentsUri}.");
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {_httpClient.BaseAddress.OriginalString}{_options.GetStudentsUri}.");
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
             var contentType = httpResponseMessage.Content.Headers.ContentType.MediaType;
@@ -57,11 +57,10 @@ namespace ConsoleClient.Clients
         public async Task SubmitStudentAggregateAsync(StudentAggregate studentAggregate)
         {
             var httpMethod = HttpMethod.Put;
-            var requestUri = "http://apitest.sertifi.net/api/StudentAggregate";// TODO LA - move URL to appsettings???
-            var httpRequestMessage = new HttpRequestMessage(httpMethod, requestUri);
+            var httpRequestMessage = new HttpRequestMessage(httpMethod, _options.SubmitStudentAggregateUri);
             var json = JsonSerializer.Serialize(studentAggregate);
             httpRequestMessage.Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
-            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {requestUri}; Content {json}.");
+            _logger.LogInformation($"Request - Method: {httpMethod}; RequestURI: {_httpClient.BaseAddress.OriginalString}{_options.SubmitStudentAggregateUri}; Content {json}.");
 
             var httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 

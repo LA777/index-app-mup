@@ -22,17 +22,26 @@ namespace Tests.Clients
     {
         private readonly ApiClient _sut;
         private readonly Mock<FakeHttpMessageHandler> _fakeHttpMessageHandler;
-        private readonly Mock<IOptionsMonitor<ApiClientOptions>> _optionsMonitorMock;
 
         public ApiClientTests()
         {
+            const string baseUri = "http://apitest.sertifi.net";
             _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
-            var httpClientMock = new Mock<HttpClient>(_fakeHttpMessageHandler.Object);
-            _optionsMonitorMock = new Mock<IOptionsMonitor<ApiClientOptions>>();
-
+            var httpClient = new HttpClient(_fakeHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri(baseUri)
+            };
+            var optionsMonitorMock = new Mock<IOptionsMonitor<ApiClientOptions>>();
+            var apiClientOptions = new ApiClientOptions()
+            {
+                BaseUrl = baseUri,
+                GetStudentsUri = "api/Students",
+                SubmitStudentAggregateUri = "api/StudentAggregate"
+            };
+            optionsMonitorMock.Setup(x => x.CurrentValue).Returns(apiClientOptions);
             var loggerMock = new Mock<ILogger<ApiClient>>();
 
-            _sut = new ApiClient(httpClientMock.Object, _optionsMonitorMock.Object, loggerMock.Object);
+            _sut = new ApiClient(httpClient, optionsMonitorMock.Object, loggerMock.Object);
         }
 
         #region GetStudentsAsyncTests

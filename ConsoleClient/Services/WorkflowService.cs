@@ -1,6 +1,8 @@
 ﻿using ConsoleClient.Clients;
 using ConsoleClient.Models;
+using ConsoleClient.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -11,11 +13,14 @@ namespace ConsoleClient.Services
         private readonly IApiClientFactory _apiClientFactory;
         private readonly ILogger<WorkflowService> _logger;
         private readonly IStudentService _studentService;
+        private readonly UserDataOptions _options;
 
-        public WorkflowService(IApiClientFactory apiClientFactory, IStudentService studentService, ILogger<WorkflowService> logger)
+        public WorkflowService(IApiClientFactory apiClientFactory, IStudentService studentService, IOptionsMonitor<UserDataOptions> optionsAccessor, ILogger<WorkflowService> logger)
         {
             _apiClientFactory = apiClientFactory ?? throw new ArgumentNullException(nameof(apiClientFactory));
             _studentService = studentService ?? throw new ArgumentNullException(nameof(studentService));
+            var accessor = optionsAccessor ?? throw new ArgumentNullException(nameof(optionsAccessor));
+            _options = accessor.CurrentValue ?? throw new ArgumentNullException(nameof(accessor.CurrentValue));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -31,8 +36,8 @@ namespace ConsoleClient.Services
 
             var studentAggregate = new StudentAggregate()
             {
-                YourName = "test1", // TODO LA - take data from appsettings
-                YourEmail = "test1@test.com",
+                YourName = _options.Name,
+                YourEmail = _options.Email,
                 StudentIdMostInconsistent = studentIdMostInconsistent,
                 Top10StudentIdsWithHighestGpa = topTenStudentsWithHighestGpa,
                 YearWithHighestAttendance = highestAttendanceYear,
@@ -41,7 +46,7 @@ namespace ConsoleClient.Services
 
             _logger.LogInformation($"studentAggregate: {studentAggregate}");
 
-            //await apiClient.SubmitStudentAggregateAsync(studentAggregate);
+            await apiClient.SubmitStudentAggregateAsync(studentAggregate);
         }
     }
 }
