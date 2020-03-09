@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Tests.Clients
+namespace Tests.Services
 {
     public class StudentServiceTests : TestBase
     {
@@ -18,11 +18,11 @@ namespace Tests.Clients
         }
 
         [Fact]
-        public void GetHighestAttendanceYear_Should_Retrun_Highest_Attendance_Year()
+        public void GetHighestAttendanceYear_Should_Return_Highest_Attendance_Year()
         {
             // Arrange
             var students = GetStudentsHighestAttendanceYear().ToList();
-            var expectedResult = 2005;
+            const int expectedResult = 2005;
 
             // Act
             var result = _sut.GetHighestAttendanceYear(students);
@@ -32,39 +32,39 @@ namespace Tests.Clients
         }
 
         [Fact]
-        public void GetHighestGPAYear_Should_Retrun_Highest_GPA_Year()
+        public void GetHighestGpaYear_Should_Return_Highest_GPA_Year()
         {
             // Arrange
-            var students = GetStudentsHighestGPAYear().ToList();
-            var expectedResult = 2006;
+            var students = GetStudentsHighestGpaYear().ToList();
+            const int expectedResult = 2006;
 
             // Act
-            var result = _sut.GetHighestGPAYear(students);
+            var result = _sut.GetHighestGpaYear(students);
 
             // Assert
             result.Should().Be(expectedResult);
         }
 
         [Fact]
-        public void GetTopStudentsWithHighestGPA_Should_Retrun_Id_List_Of_Top_Students()
+        public void GetTopTenStudentsWithHighestGpa_Should_Return_Id_List_Of_Top_Students()
         {
             // Arrange
-            var students = GetStudentsHighestGPA().ToList();
-            var expectedResult = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 28, 10 };
+            var students = GetStudentsHighestGpa().ToList();
+            var expectedResult = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 28, 10 };
 
             // Act
-            var result = _sut.GetTopStudentsWithHighestGPA(students);
+            var result = _sut.GetTopTenStudentsWithHighestGpa(students);
 
             // Assert
             result.Should().BeEquivalentTo(expectedResult);
         }
 
         [Fact]
-        public void GetStudentIdMostInconsistent_Should_Retrun_Student_Id_Most_Inconsistent()
+        public void GetStudentIdMostInconsistent_Should_Return_Student_Id_Most_Inconsistent()
         {
             // Arrange
             var students = GetStudentsMostInconsistent().ToList();
-            var expectedResult = 7;
+            const int expectedResult = 7;
 
             // Act
             var result = _sut.GetStudentIdMostInconsistent(students);
@@ -102,7 +102,7 @@ namespace Tests.Clients
             }
         }
 
-        private IEnumerable<Student> GetStudentsHighestGPA()
+        private IEnumerable<Student> GetStudentsHighestGpa()
         {
             var yearRanges = new List<(int, int, int, decimal[])> {
                 (1, 2001, 2002, new[] { 2.4m, 3.2m }),
@@ -132,7 +132,7 @@ namespace Tests.Clients
         }
 
 
-        private IEnumerable<Student> GetStudentsHighestGPAYear()
+        private IEnumerable<Student> GetStudentsHighestGpaYear()
         {
             var yearRanges = new List<(int, int, decimal[])> {
                 (2001, 2002, new[] { 2.4m, 3.2m }),

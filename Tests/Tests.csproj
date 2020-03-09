@@ -20,4 +20,10 @@
     <ProjectReference Include="..\ConsoleClient\ConsoleClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ComponentTests\students.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

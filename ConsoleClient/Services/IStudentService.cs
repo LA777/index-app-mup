@@ -7,9 +7,9 @@ namespace ConsoleClient.Services
     {
         int GetHighestAttendanceYear(IReadOnlyCollection<Student> students);
 
-        int GetHighestGPAYear(IReadOnlyCollection<Student> students);
+        int GetHighestGpaYear(IReadOnlyCollection<Student> students);
 
-        IEnumerable<int> GetTopStudentsWithHighestGPA(IReadOnlyCollection<Student> students);
+        IEnumerable<int> GetTopTenStudentsWithHighestGpa(IReadOnlyCollection<Student> students);
 
         int GetStudentIdMostInconsistent(IReadOnlyCollection<Student> students);
     }
