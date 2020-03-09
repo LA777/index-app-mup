@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.Services
@@ -41,7 +42,7 @@ namespace Tests.Services
         }
 
         [Fact]
-        public void DoTestTaskAsync_Should_Call_ApiClient_And_StudentService()
+        public async Task DoTestTaskAsync_Should_Call_ApiClient_And_StudentService()
         {
             // Arrange
             var students = Fixture.CreateMany<Student>().ToList();
@@ -61,7 +62,7 @@ namespace Tests.Services
                 .Callback((StudentAggregate sa) => resultStudentAggregate = sa);
 
             // Act
-            _sut.DoTestTaskAsync();
+            await _sut.DoTestTaskAsync();
 
             // Assert
             _apiClientFactoryMock.Verify(x => x.Create(), Times.Once);

@@ -4,9 +4,9 @@ namespace Tests
 {
     public abstract class TestBase
     {
-        protected IFixture Fixture { get; }
+        protected static IFixture Fixture { get; }
 
-        protected TestBase()
+        static TestBase()
         {
             Fixture = new Fixture();
             Fixture.Behaviors.Remove(new ThrowingRecursionBehavior());

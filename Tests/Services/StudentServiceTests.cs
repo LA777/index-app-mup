@@ -22,7 +22,7 @@ namespace Tests.Services
         {
             // Arrange
             var students = GetStudentsHighestAttendanceYear().ToList();
-            var expectedResult = 2005;
+            const int expectedResult = 2005;
 
             // Act
             var result = _sut.GetHighestAttendanceYear(students);
@@ -36,7 +36,7 @@ namespace Tests.Services
         {
             // Arrange
             var students = GetStudentsHighestGpaYear().ToList();
-            var expectedResult = 2006;
+            const int expectedResult = 2006;
 
             // Act
             var result = _sut.GetHighestGpaYear(students);
@@ -64,7 +64,7 @@ namespace Tests.Services
         {
             // Arrange
             var students = GetStudentsMostInconsistent().ToList();
-            var expectedResult = 7;
+            const int expectedResult = 7;
 
             // Act
             var result = _sut.GetStudentIdMostInconsistent(students);

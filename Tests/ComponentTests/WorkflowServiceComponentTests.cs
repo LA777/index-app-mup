@@ -9,6 +9,7 @@ using Moq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.ComponentTests
@@ -39,7 +40,7 @@ namespace Tests.ComponentTests
         }
 
         [Fact]
-        public void DoTestTaskAsync_Should_Call_ApiClient_And_StudentService_And_Submit_Correct_Values()
+        public async Task DoTestTaskAsync_Should_Call_ApiClient_And_StudentService_And_Submit_Correct_Values()
         {
             // Arrange
             var students = GetRealData();
@@ -61,7 +62,7 @@ namespace Tests.ComponentTests
                 .Callback((StudentAggregate sa) => resultStudentAggregate = sa);
 
             // Act
-            _sut.DoTestTaskAsync();
+            await _sut.DoTestTaskAsync();
 
             // Assert
             resultStudentAggregate.Should().BeEquivalentTo(expectedStudentAggregate);
